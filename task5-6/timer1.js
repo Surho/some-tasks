@@ -5,10 +5,10 @@ let stopWatch = function() {
     this.seconds = 0;
     this.mins = 0;
     this.hours = 0;
-    this._timerId = null;
-    this.startTime = null;
-    this.interval = 8;
+    this.getElements();
+};
 
+stopWatch.prototype.getElements = function() {
     this.timerStopPoints = document.querySelector(".stop-times");
     this.timeDisplayMilisecs = document.querySelector(".timer-display-milisecs");
     this.timeDisplaySecs = document.querySelector(".timer-display-secs");
@@ -17,89 +17,86 @@ let stopWatch = function() {
     this.timerButton = document.querySelector(".start");
     this.timerClear = document.querySelector(".clear");
     this.timerSplit = document.querySelector(".split");
-};
+}
 
 stopWatch.prototype.start = function() {
-    let self = this;
-    if(!this.startTime) {
-       this.startTime = new Date(); 
+    if(this._timerId === "wasPaused") {
+        this.startTime = this.startTime - (this.pauseTime - new Date());
+        this.updateTime();
+        return this;
     }
-    this._timerId = setInterval(function() {
-        if (pageVisible) {
-            let now = new Date();
-            let milisecsShift = now - self.startTime;
-            self.miliseconds +=  milisecsShift;
-            if(self.miliseconds >= 1000) {
-            self.miliseconds = 0;
-            self.seconds += 1; 
-            if(self.seconds === 60) {
-                    self.seconds = 0;
-                    self.mins += 1;
-                    if(self.mins === 60) {
-                        self.mins = 0;
-                        self.hours += 1;
-                    }
-                }
-            }
-            self.startTime = now;
-        } else {
-            console.log("kek");
-            self.seconds+=1; 
-        }
-    }, this.interval);  
+    this.startTime = new Date();
+    this.updateTime();
 };
 
+stopWatch.prototype.displayTime = function() {
+    this.timeDisplayMilisecs.innerHTML = `<p> ${this.formatInput(this.miliseconds, 3)} </p>`;
+    this.timeDisplaySecs.innerHTML = `<p> ${this.formatInput(this.seconds)} </p>`;  
+    this.timeDisplayMins.innerHTML = `<p> ${this.formatInput(this.mins)} </p>`; 
+    this.timeDisplayHours.innerHTML = `<p> ${this.formatInput(this.hours)} </p>`;
+};
+
+stopWatch.prototype.updateTime = function() {
+    self = this;
+    this._timerId = setInterval(function() {
+        let timeUpdate = new Date(new Date() - this.startTime);
+        
+        this.hours = timeUpdate.getUTCHours();
+        this.mins = timeUpdate.getUTCMinutes();
+        this.seconds = timeUpdate.getUTCSeconds();
+        this.miliseconds = timeUpdate.getUTCMilliseconds();
+
+        this.displayTime(); 
+
+    }.bind(this));
+}
+
 stopWatch.prototype.pause = function() {
-    let self = this;
-    if(this._timerId) clearInterval(this._timerId);
-    this.startTime = new Date();   
+    this.pauseTime = new Date();
+    clearInterval(this._timerId);
+    this._timerId = "wasPaused";
 };
 
 stopWatch.prototype.createStopPoint = function(buttonClicked) {
     let childNumber = this.timerStopPoints.children.length + 1;
     this.timerStopPoints.insertAdjacentHTML("beforeend", 
-    `<p>${childNumber} ${buttonClicked} ${timer.formatInput(timer.hours)}:${timer.formatInput(timer.mins)}:${timer.formatInput(timer.seconds)}:${timer.miliseconds}</p>`
+    `<p>${childNumber} ${buttonClicked} ${this.formatInput(this.hours)}:${this.formatInput(this.mins)}:${this.formatInput(this.seconds)}:${this.formatInput(this.miliseconds)}</p>`
     )
 };
 
 stopWatch.prototype.clear = function() {
-    if(this._timerId) this.pause();
-    this.timerStopPoints.innerHTML = "";
+    this.pause();
+    this._timerId = null;
+    this.pauseTime = 0;
     this.startTime = null;
     this.miliseconds = 0;
     this.seconds = 0;
     this.mins = 0;
     this.hours = 0;
+    this.timerButton.classList = "start";
+    this.timerButton.textContent = timer.timerButton.classList;
+    this.displayTime();
+    this.timerStopPoints.innerHTML = "";
 };
 
-stopWatch.prototype.formatInput = function(input) {
-    if(input < 10) {
-        let output = "0" + input;
-        return output;
-    }
-    return input;
+stopWatch.prototype.formatInput = function(input, n) {
+    n = n || 2;
+    let output = ("000" + input).slice(-n);
+    return output;
 };
 
 let timer = new stopWatch();
 
 timer.timerButton.addEventListener('click', function() {
     if(timer.timerButton.classList.contains('start')) {
-        if(timer._timerId) timer.pause();
+        timer.timerButton.classList.toggle('start');
+        timer.timerButton.classList.toggle('pause');
         timer.start();
-        timer.timerButton.classList.remove('start');
-        timer.timerButton.classList.add('pause');
         timer.timerButton.textContent = timer.timerButton.classList;
-        var displayTime = setInterval(function() {
-            timer.timeDisplayMilisecs.innerHTML = `<p> ${timer.miliseconds} </p>`;
-            timer.timeDisplaySecs.innerHTML = `<p> ${timer.formatInput(timer.seconds)} </p>`;  
-            timer.timeDisplayMins.innerHTML = `<p> ${timer.formatInput(timer.mins)} </p>`; 
-            timer.timeDisplayHours.innerHTML = `<p> ${timer.formatInput(timer.hours)} </p>`;   
-        }, 50);
     } else {
+       timer.timerButton.classList.toggle('start');
+       timer.timerButton.classList.toggle('pause');
        timer.pause();
-       clearInterval(displayTime);
-       timer.timerButton.classList.remove('pause'); 
-       timer.timerButton.classList.add('start'); 
        timer.timerButton.textContent = timer.timerButton.classList;
        timer.createStopPoint('pause');
     }
@@ -113,11 +110,4 @@ timer.timerSplit.addEventListener('click', function() {
     timer.createStopPoint('split');
 });
 
-window.addEventListener('focus', function() {
-    pageVisible = true;
-    timer.interval = 1000;
-});
-window.addEventListener('blur', function() {
-    pageVisible = false;
-    timer.interval = 8;
-})
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<link href="https://fonts.googleapis.com/css?family=Raleway:400,600" rel="stylesheet">
+		<link rel="stylesheet" href="style.css">
+		<script src="jquery-3.2.1.slim.min.js"></script>
+		<script src="jq-tooltip.js"></script>
+		<script src="jq-tabs.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div class="tabs">
+        		<ul class="tabs-list">
+					<li class="active"><a href="#" data-tab="tab-home">Home</a></li>
+					<li><a href="#" data-tab="tab-about">About</a></li>
+					<li><a href="#" data-tab="tab-contacts">Contacts</a></li>
+					<li><a href="#" data-tab="tab-inputs">Inputs</a></li>
+				</ul>
+				<div class="tabs-pages">
+					<div class="tab-home active">
+						<p>1)Lorem ipsum dolor sit amet,
+							consectetur adipisicing elit. 
+								Minima quibusdam eum esse, qui eos
+						</p> 
+					</div>
+					<div class="tab-about">
+						<p>2)Lorem ipsum dolor sit amet,
+							consectetur adipisicing elit. 
+								Minima quibusdam eum esse, qui eos
+						</p> 
+					</div>
+					<div class="tab-contacts">
+						<p>3)Lorem ipsum dolor sit amet,
+							consectetur adipisicing elit. 
+								Minima quibusdam eum esse, qui eos
+						</p> 
+					</div>
+					<div class="tab-inputs">
+						<form action="index.php" method="GET">
+							<label>
+								First Name <input id="first-name" type="text" name="firstName">
+								<p class="input-tooltip">lorem ipsum</p>
+							</label>
+							<label>
+								Second Name <input id="second-name" type="text" name="lastName">
+								<p class="input-tooltip">lorem ipsum</p>
+							</label>
+							<label>
+								Adress <input id="address" type="text" name="address">
+								<p class="input-tooltip">lorem ipsum yo</p>
+							</label>
+							<button name="showHelp">Show Help</button>
+						</form>
+					</div>
+			</div>
+		</div>
+</body>
+</html>

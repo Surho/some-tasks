@@ -1,0 +1,111 @@
+html,
+body {
+    margin:0;
+    padding:0;
+    background:#E0E4E3;
+}
+.tabs-list {
+    margin:0;
+    padding:0;
+    padding-left:25px;
+    margin-top:25px;
+    list-style:none;
+    font-size:0;
+    font-family: 'Raleway', sans-serif;
+    background:#EAECEB;
+}
+.tabs-pages {
+    display:inline-block;
+    padding:10px;
+    padding-left:25px;
+    font-family: 'Raleway', sans-serif;
+}
+.tabs-list li{
+    position:relative;
+    display:inline-block;
+    text-align:center;
+    transition:background-color 0.2s linear;
+    background-color:#EAECEB;
+}
+.tabs-list li.active{
+    background-color:#fff;
+} 
+.tabs-list li.active::before {
+    content:"";
+    position:absolute;
+    top:100%;
+    left:50%;
+    border:10px solid #fff;
+    border-bottom-width:0px;
+    border-left-color:transparent;
+    border-right-color:transparent;
+    transform:translateX(-50%);
+}
+.tabs-list a {
+    position:relative;
+    display:block;
+    padding:30px 55px;
+    font-size:16px;
+    font-weight:600;
+    color:#3cb765;
+    text-decoration:none;
+}
+.tabs-list li.active a{
+    color:black;
+}
+.tabs-list a::before {
+    content:"";
+    position:absolute;
+    left:0;
+    top:50%;
+    width:1px;
+    height:50px;
+    transform:translateY(-50%);
+    background-color:#d3d3d3;
+}
+.tabs-list li:last-child a::after {
+    content:"";
+    position:absolute;
+    right:0;
+    top:50%;
+    width:1px;
+    height:50px;
+    transform:translateY(-50%);
+    background-color:#d3d3d3;
+}
+.tabs-list li.active a::before {
+    background-color:transparent;
+}
+.tabs-list li.active + li a::before {
+    background-color:transparent;
+}
+.tabs-list li:last-child.active a::after {
+    background-color:transparent;
+}
+.tabs-pages > * {
+    display:none;
+}
+.tabs-pages .active {
+    display:block;
+}
+.tab-inputs label {
+    position:relative;
+    display:block;
+    margin-bottom:30px;
+}
+.input-tooltip {
+    position:absolute;
+    width:200px;
+    margin:0;
+    padding:5px;
+    top:0;
+    left:105%;
+    background-color:#fff;
+    border-radius:5px;
+    box-shadow:0px 2px 25px 0px rgba(0,0,0,0.2);
+    opacity:0;
+    transition:opacity 0.1s linear;
+}
+.input-tooltip.shown {
+    opacity:1;
+}
